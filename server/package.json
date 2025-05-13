@@ -1,0 +1,16 @@
+{
+  "name": "novel-authoring-server",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "base64url": "^3.0.1",
+    "body-parser": "^1.20.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "fs-extra": "^11.3.0"
+  }
+}

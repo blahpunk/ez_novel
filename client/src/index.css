@@ -1,0 +1,62 @@
+/* Global body and font styles */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+/* Global input and textarea dark theme */
+input[type="text"],
+textarea {
+  background-color: #2e2e2e;
+  color: #e0e0e0;
+  border: 1px solid #444;
+  padding: 5px;
+}
+
+/* react-draft-wysiwyg Overrides */
+.rdw-editor-toolbar {
+  background-color: #333 !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.rdw-dropdown-wrapper,
+.rdw-option-wrapper,
+.rdw-dropdownoptionwrapper {
+  background-color: #333 !important;
+  color: #e0e0e0 !important;
+  border: none !important;
+  padding: 0 5px !important;
+}
+
+.rdw-option-wrapper:hover,
+.rdw-dropdownoptionwrapper:hover {
+  background-color: #444 !important;
+}
+
+.rdw-dropdown-selectedtext {
+  color: #e0e0e0 !important;
+}
+
+.rdw-dropdown-caret {
+  border-top: 4px solid #e0e0e0 !important;
+}
+
+.rdw-option-wrapper, 
+.rdw-dropdownoptionwrapper {
+  height: 20px !important;
+  line-height: 20px !important;
+}
+
+.rdw-inline-wrapper {
+  min-height: 20px !important;
+}

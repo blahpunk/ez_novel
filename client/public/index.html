@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+<script>
+  (function () {
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    const userCookie = getCookie('user');
+    if (!userCookie) {
+      const loginUrl = 'https://secure.blahpunk.com/oauth_login?next=' + encodeURIComponent(window.location.href);
+      window.location.href = loginUrl;
+    }
+  })();
+</script>
+
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="EZ Novel Author" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <title>EZ Novel Author</title>
+
+    <!-- Enforce HTTPS in production -->
+    <script>
+      if (location.protocol !== 'https:') {
+        location.href = 'https://' + location.hostname + location.pathname + location.search;
+      }
+    </script>
+    <script>
+  (function () {
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    const userCookie = getCookie('user');
+    if (!userCookie) {
+      const loginUrl = 'https://secure.blahpunk.com/oauth_login?next=' + encodeURIComponent(window.location.href);
+      window.location.href = loginUrl;
+    }
+  })();
+</script>
+
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+</html>

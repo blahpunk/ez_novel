@@ -1,0 +1,553 @@
+{
+  "books": [
+    {
+      "id": 1,
+      "title": "Kingly A Sparrow",
+      "chapters": [
+        {
+          "id": 1,
+          "title": "Taking Flight",
+          "content": {
+            "blocks": [
+              {
+                "key": "7jvpe",
+                "text": "I want to show you something.",
+                "type": "unstyled",
+                "depth": 0,
+                "inlineStyleRanges": [
+                  {
+                    "offset": 0,
+                    "length": 29,
+                    "style": "ITALIC"
+                  }
+                ],
+                "entityRanges": [],
+                "data": {}
+              },
+              {
+                "key": "dfed1",
+                "text": "Alef drew a sheaf of papers from high on one of the tall bookshelves.  The pages were blank, and Alef laid them out on the broad desk, covered in more books, and began making concentrated markings.",
+                "type": "unstyled",
+                "depth": 0,
+                "inlineStyleRanges": [],
+                "entityRanges": [],
+                "data": {}
+              },
+              {
+                "key": "19k2p",
+                "text": "The lines appeared as scribbles--like Alef was drawing overlapping spirals with some sort of worrying determination.  Ewon considered whether to back away, even asking to be excused, but instead leaned in with some concern.  Wondering if something had come over Alef, Ewon reached a gentle hand to Alef's shoulder.  But, just as so, Alef had finished the drawing as quickly as started, standing back upright to reveal the details of the image.",
+                "type": "unstyled",
+                "depth": 0,
+                "inlineStyleRanges": [],
+                "entityRanges": [],
+                "data": {}
+              },
+              {
+                "key": "ac789",
+                "text": "Ewon saw now what had appeared as a growing cluster of spirals.  However, with closer attention, Ewon saw there appeared to be symmetries in the image.  With Ewon's interest thus captured, it became apparent that the spirals were indeed circles, a great many of them, overlapping in some great pattern.",
+                "type": "unstyled",
+                "depth": 0,
+                "inlineStyleRanges": [],
+                "entityRanges": [],
+                "data": {}
+              },
+              {
+                "key": "fse3b",
+                "text": "Like a foam.  Some familiarity dawned in Ewon at the geometry of the circles, the symmetry.  I've seen this before, or something like this.  Like a mandala.  Ewon voiced the thoughts.",
+                "type": "unstyled",
+                "depth": 0,
+                "inlineStyleRanges": [
+                  {
+                    "offset": 0,
+                    "length": 14,
+                    "style": "ITALIC"
+                  },
+                  {
+                    "offset": 93,
+                    "length": 65,
+                    "style": "ITALIC"
+                  }
+                ],
+                "entityRanges": [],
+                "data": {}
+              },
+              {
+                "key": "41skc",
+                "text": "Both a fair approximation.  Alef said, stoically.  This is us.  Gesturing over the image with one hand.  This is where we are.  This is a map of our universe, of our Reality, of our Selves--to put it mildly, this is anything we wish.  Ewon stared at the glyph, wondering, before turning back to Alef.",
+                "type": "unstyled",
+                "depth": 0,
+                "inlineStyleRanges": [
+                  {
+                    "offset": 0,
+                    "length": 28,
+                    "style": "ITALIC"
+                  },
+                  {
+                    "offset": 51,
+                    "length": 13,
+                    "style": "ITALIC"
+                  },
+                  {
+                    "offset": 105,
+                    "length": 130,
+                    "style": "ITALIC"
+                  }
+                ],
+                "entityRanges": [],
+                "data": {}
+              },
+              {
+                "key": "a5bes",
+                "text": "This can take us places?  Ewon spoke with concealed skepticism, thinking to remember things read in old texts.",
+                "type": "unstyled",
+                "depth": 0,
+                "inlineStyleRanges": [
+                  {
+                    "offset": 0,
+                    "length": 26,
+                    "style": "ITALIC"
+                  }
+                ],
+                "entityRanges": [],
+                "data": {}
+              },
+              {
+                "key": "18u67",
+                "text": "",
+                "type": "unstyled",
+                "depth": 0,
+                "inlineStyleRanges": [],
+                "entityRanges": [],
+                "data": {}
+              }
+            ],
+            "entityMap": {}
+          }
+        }
+      ],
+      "selectedChapterId": 1,
+      "characters": [
+        {
+          "id": 1741326886309,
+          "name": "Ewon",
+          "notes": [
+            {
+              "blocks": [
+                {
+                  "key": "4covr",
+                  "text": "TBD",
+                  "type": "unstyled",
+                  "depth": 0,
+                  "inlineStyleRanges": [],
+                  "entityRanges": [],
+                  "data": {}
+                }
+              ],
+              "entityMap": {}
+            }
+          ]
+        },
+        {
+          "id": 1741797726436,
+          "name": "Alef",
+          "notes": [
+            {
+              "blocks": [
+                {
+                  "key": "cqll7",
+                  "text": "TBD",
+                  "type": "unstyled",
+                  "depth": 0,
+                  "inlineStyleRanges": [],
+                  "entityRanges": [],
+                  "data": {}
+                }
+              ],
+              "entityMap": {}
+            }
+          ]
+        }
+      ],
+      "locations": [],
+      "plotPoints": [],
+      "settings": {}
+    },
+    {
+      "id": 1740010338101,
+      "title": "Bubble Theory, or: How the Light Gets In",
+      "chapters": [
+        {
+          "id": 1,
+          "title": "I'm Not Experiencing Psychosis Currently, But I Wish You All Would Take Off Those Masks",
+          "content": {
+            "blocks": [
+              {
+                "key": "89qb0",
+                "text": "\"There is a crack, a crack, in everything -- That's how the light gets in\"",
+                "type": "unstyled",
+                "depth": 0,
+                "inlineStyleRanges": [],
+                "entityRanges": [],
+                "data": {
+                  "text-align": "center"
+                }
+              },
+              {
+                "key": "e96cp",
+                "text": "Leonard Cohen",
+                "type": "unstyled",
+                "depth": 0,
+                "inlineStyleRanges": [],
+                "entityRanges": [],
+                "data": {
+                  "text-align": "right"
+                }
+              },
+              {
+                "key": "6dg1h",
+                "text": "My quest for understanding has resulted in many slow revelations, realizations unfolding over time.  I first found answers to my own struggles by connecting to the larger pain of human suffering.  Much of my life has been spent trying to reconcile this reality with the idea that there might be a better one.",
+                "type": "unstyled",
+                "depth": 0,
+                "inlineStyleRanges": [],
+                "entityRanges": [],
+                "data": {}
+              },
+              {
+                "key": "djg5u",
+                "text": "In time I found the greatest sense in relating humanity purely by its animal nature.  When nothing humans did made sense to me, in either the greater course or the day-to-day, I found anthropology and biology equally fascinating.",
+                "type": "unstyled",
+                "depth": 0,
+                "inlineStyleRanges": [],
+                "entityRanges": [],
+                "data": {}
+              }
+            ],
+            "entityMap": {}
+          }
+        }
+      ],
+      "selectedChapterId": 1,
+      "characters": [],
+      "locations": [
+        {
+          "id": 1740135485878,
+          "name": "fff",
+          "notes": [
+            {
+              "blocks": [
+                {
+                  "key": "ks91",
+                  "text": "fff",
+                  "type": "unstyled",
+                  "depth": 0,
+                  "inlineStyleRanges": [],
+                  "entityRanges": [],
+                  "data": {}
+                }
+              ],
+              "entityMap": {}
+            },
+            {
+              "blocks": [
+                {
+                  "key": "5g5js",
+                  "text": "fff",
+                  "type": "unstyled",
+                  "depth": 0,
+                  "inlineStyleRanges": [],
+                  "entityRanges": [],
+                  "data": {}
+                },
+                {
+                  "key": "9s3k7",
+                  "text": "fff",
+                  "type": "unstyled",
+                  "depth": 0,
+                  "inlineStyleRanges": [],
+                  "entityRanges": [],
+                  "data": {}
+                }
+              ],
+              "entityMap": {}
+            }
+          ]
+        }
+      ],
+      "plotPoints": [
+        {
+          "id": 1740136563433,
+          "text": "Light floods the universe",
+          "notes": [
+            {
+              "blocks": [
+                {
+                  "key": "cfnea",
+                  "text": "The light of stars is ubiquitous, connecting vast voids of space.",
+                  "type": "unordered-list-item",
+                  "depth": 0,
+                  "inlineStyleRanges": [],
+                  "entityRanges": [],
+                  "data": {}
+                },
+                {
+                  "key": "eoka5",
+                  "text": "We start to see the spiral far before we look out in to space -- it is written in every particle of us, the same spiral.",
+                  "type": "unordered-list-item",
+                  "depth": 0,
+                  "inlineStyleRanges": [],
+                  "entityRanges": [],
+                  "data": {}
+                }
+              ],
+              "entityMap": {}
+            }
+          ]
+        }
+      ],
+      "settings": {}
+    },
+    {
+      "id": 1740139615113,
+      "title": "Sample Book",
+      "chapters": [
+        {
+          "id": 1,
+          "title": "The First Chapter",
+          "content": {
+            "blocks": [
+              {
+                "key": "fpn3k",
+                "text": "This is a sample book to preview the PDF export functionality.",
+                "type": "unstyled",
+                "depth": 0,
+                "inlineStyleRanges": [],
+                "entityRanges": [],
+                "data": {}
+              }
+            ],
+            "entityMap": {}
+          }
+        },
+        {
+          "id": 2,
+          "title": "Another Chapter",
+          "content": {
+            "blocks": [
+              {
+                "key": "d2mlt",
+                "text": "Make sure to check back for updates!",
+                "type": "unstyled",
+                "depth": 0,
+                "inlineStyleRanges": [],
+                "entityRanges": [],
+                "data": {}
+              }
+            ],
+            "entityMap": {}
+          }
+        }
+      ],
+      "selectedChapterId": 1,
+      "characters": [
+        {
+          "id": 1743295305975,
+          "name": "Don Iguana",
+          "notes": [
+            {
+              "blocks": [
+                {
+                  "key": "anknc",
+                  "text": "Investigator",
+                  "type": "unstyled",
+                  "depth": 0,
+                  "inlineStyleRanges": [],
+                  "entityRanges": [],
+                  "data": {}
+                }
+              ],
+              "entityMap": {}
+            },
+            {
+              "blocks": [
+                {
+                  "key": "8tcdk",
+                  "text": "",
+                  "type": "unstyled",
+                  "depth": 0,
+                  "inlineStyleRanges": [],
+                  "entityRanges": [],
+                  "data": {}
+                }
+              ],
+              "entityMap": {}
+            }
+          ]
+        }
+      ],
+      "locations": [],
+      "plotPoints": [],
+      "settings": {}
+    },
+    {
+      "id": 1740249291467,
+      "title": "Journal",
+      "chapters": [
+        {
+          "id": 1,
+          "title": "Chapter 1",
+          "content": {
+            "blocks": [
+              {
+                "key": "b1ee0",
+                "text": "ᚨᛗᛖᚱᛊᛏᚨᚲ ᛁᛊ ᛏᚺᛖ ᛗᛟᛋᛏ ᛈᛟᚹᛖᚱᚠᚢᛚ ᛟᚠ ᚨᛚᛚ",
+                "type": "unstyled",
+                "depth": 0,
+                "inlineStyleRanges": [],
+                "entityRanges": [],
+                "data": {}
+              },
+              {
+                "key": "2866d",
+                "text": "\"Amerstak is the most powerful of all\" ",
+                "type": "unstyled",
+                "depth": 0,
+                "inlineStyleRanges": [],
+                "entityRanges": [],
+                "data": {}
+              },
+              {
+                "key": "6e3ov",
+                "text": "",
+                "type": "unstyled",
+                "depth": 0,
+                "inlineStyleRanges": [],
+                "entityRanges": [],
+                "data": {}
+              },
+              {
+                "key": "d3fvr",
+                "text": "",
+                "type": "unstyled",
+                "depth": 0,
+                "inlineStyleRanges": [],
+                "entityRanges": [],
+                "data": {}
+              },
+              {
+                "key": "1pcts",
+                "text": "",
+                "type": "unstyled",
+                "depth": 0,
+                "inlineStyleRanges": [],
+                "entityRanges": [],
+                "data": {}
+              },
+              {
+                "key": "2vmjk",
+                "text": "DARK MAGIK IS POWER AND RESKUE THE NORTH",
+                "type": "unstyled",
+                "depth": 0,
+                "inlineStyleRanges": [],
+                "entityRanges": [],
+                "data": {}
+              },
+              {
+                "key": "eoo71",
+                "text": "BANNED FROM THE SOUTH FOREST",
+                "type": "unstyled",
+                "depth": 0,
+                "inlineStyleRanges": [],
+                "entityRanges": [],
+                "data": {}
+              },
+              {
+                "key": "4lgfe",
+                "text": "",
+                "type": "unstyled",
+                "depth": 0,
+                "inlineStyleRanges": [],
+                "entityRanges": [],
+                "data": {}
+              },
+              {
+                "key": "58jbp",
+                "text": "",
+                "type": "unstyled",
+                "depth": 0,
+                "inlineStyleRanges": [],
+                "entityRanges": [],
+                "data": {}
+              },
+              {
+                "key": "1iah8",
+                "text": "",
+                "type": "unstyled",
+                "depth": 0,
+                "inlineStyleRanges": [],
+                "entityRanges": [],
+                "data": {}
+              }
+            ],
+            "entityMap": {}
+          }
+        }
+      ],
+      "selectedChapterId": 1,
+      "characters": [],
+      "locations": [],
+      "plotPoints": [],
+      "settings": {}
+    },
+    {
+      "id": 1740533695750,
+      "title": "Sparrow White",
+      "chapters": [
+        {
+          "id": 1,
+          "title": "Chapter 1",
+          "content": {
+            "blocks": [
+              {
+                "key": "2jcgm",
+                "text": "",
+                "type": "unstyled",
+                "depth": 0,
+                "inlineStyleRanges": [],
+                "entityRanges": [],
+                "data": {}
+              }
+            ],
+            "entityMap": {}
+          }
+        }
+      ],
+      "selectedChapterId": 1,
+      "characters": [
+        {
+          "id": 1740533777412,
+          "name": "The barrow-wight",
+          "notes": [
+            {
+              "blocks": [
+                {
+                  "key": "1krmo",
+                  "text": "",
+                  "type": "unstyled",
+                  "depth": 0,
+                  "inlineStyleRanges": [],
+                  "entityRanges": [],
+                  "data": {}
+                }
+              ],
+              "entityMap": {}
+            }
+          ]
+        }
+      ],
+      "locations": [],
+      "plotPoints": [],
+      "settings": {}
+    }
+  ],
+  "selectedBookId": 1740139615113
+}

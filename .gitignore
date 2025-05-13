@@ -1,0 +1,15 @@
+# Node modules (for both client and server)
+**/node_modules
+
+# Saved data (if your saved data is in server/data.json)
+server/data.json
+
+# Build artifacts
+client/build
+
+# Logs
+*.log
+
+# Environment files (if not needed)
+*.env
+

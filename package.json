@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "dev": "vite --host 0.0.0.0 --port 7692",
+    "start": "vite --host 0.0.0.0 --port 7692"
+  },
+  "dependencies": {
+    "html2canvas": "^1.4.1",
+    "jspdf": "^3.0.0"
+  }
+}
