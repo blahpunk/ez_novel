@@ -25,7 +25,7 @@ const NoteList = styled.ul`
   list-style-type: disc;
   padding-left: 20px;
   margin: 0;
-  line-height: 0.8;
+  line-height: 1.4;
 `;
 
 const ListItem = styled.li`
@@ -119,7 +119,7 @@ function PlotTab() {
                       backgroundColor: '#2e2e2e',
                       color: '#e0e0e0',
                       border: '1px solid #444',
-                      lineHeight: '0.8',
+                      lineHeight: '1.4',
                     }}
                   />
                 </div>

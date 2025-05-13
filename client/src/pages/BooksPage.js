@@ -176,16 +176,17 @@ function BookCardComponent({ book, onSelectBook, onChapterSelect }) {
 
   return (
     <BookListItem onClick={() => onSelectBook(book.id)}>
-      <TitleDisplay onClick={(e) => e.stopPropagation()}>
+      <TitleDisplay>
         {editing ? (
           <>
             <TitleInput
               type="text"
               value={editedTitle}
               onChange={(e) => setEditedTitle(e.target.value)}
+              onClick={(e) => e.stopPropagation()}
             />
-            <EditButton onClick={handleSave}>Save</EditButton>
-            <EditButton onClick={() => setEditing(false)}>Cancel</EditButton>
+            <EditButton onClick={(e) => { e.stopPropagation(); handleSave(); }}>Save</EditButton>
+            <EditButton onClick={(e) => { e.stopPropagation(); setEditing(false); }}>Cancel</EditButton>
           </>
         ) : (
           <>
@@ -199,7 +200,13 @@ function BookCardComponent({ book, onSelectBook, onChapterSelect }) {
       <ChapterList>
         {book.chapters &&
           book.chapters.map((chapter) => (
-            <ChapterListItem key={chapter.id} onClick={(e) => { e.stopPropagation(); onChapterSelect(book.id, chapter.id); }}>
+            <ChapterListItem
+              key={chapter.id}
+              onClick={(e) => {
+                e.stopPropagation();
+                onChapterSelect(book.id, chapter.id);
+              }}
+            >
               {chapter.title}
             </ChapterListItem>
           ))}
@@ -207,5 +214,6 @@ function BookCardComponent({ book, onSelectBook, onChapterSelect }) {
     </BookListItem>
   );
 }
+
 
 export default BooksPage;

@@ -7,9 +7,6 @@ const PageContainer = styled.div`
   background-color: #1e1e1e;
   flex: 1;
   overflow-y: auto;
-  width: 100%;
-  max-width: 1000px;
-  margin: 0 auto;
 `;
 
 function CharactersPage() {
