@@ -169,7 +169,64 @@
         }
       ],
       "locations": [],
-      "plotPoints": [],
+      "plotPoints": [
+        {
+          "id": 1747157907356,
+          "text": "Testing",
+          "notes": [
+            {
+              "blocks": [
+                {
+                  "key": "64hbo",
+                  "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In molestie sollicitudin arcu eget lobortis. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus viverra finibus auctor. Curabitur id mauris consectetur, placerat eros sit amet, tincidunt enim. Morbi sed eleifend odio, a consequat dolor. Curabitur mattis odio a metus vulputate pharetra. Curabitur ut dolor nec nunc convallis egestas. Aenean sollicitudin blandit quam. Cras finibus eros luctus, maximus augue a, posuere eros. Sed at tristique magna. Aliquam scelerisque libero a varius malesuada. Etiam id sollicitudin nunc, ac dictum tortor. Donec et iaculis felis.",
+                  "type": "unstyled",
+                  "depth": 0,
+                  "inlineStyleRanges": [],
+                  "entityRanges": [],
+                  "data": {}
+                },
+                {
+                  "key": "6ojb",
+                  "text": "Fusce pulvinar tortor vitae fringilla iaculis. Donec mattis lorem non leo consequat tincidunt. Nullam bibendum mollis condimentum. Nunc vel quam quis metus pulvinar facilisis nec id nunc. Donec enim erat, maximus a varius vel, dapibus et mi. In hac habitasse platea dictumst. Praesent tincidunt est sed tellus cursus, sed volutpat eros aliquam. Vivamus a blandit nisi. Praesent eleifend nisl leo, sed scelerisque sem dictum vel. Nunc vitae eros tristique, lacinia tellus luctus, vestibulum justo. Nullam a sollicitudin nisi. Donec vel turpis eu odio cursus tempus et vel lorem. Fusce accumsan tristique eros ut interdum. Duis mauris dolor, dignissim a vestibulum nec, semper quis diam.",
+                  "type": "unstyled",
+                  "depth": 0,
+                  "inlineStyleRanges": [],
+                  "entityRanges": [],
+                  "data": {}
+                },
+                {
+                  "key": "7katt",
+                  "text": "Vestibulum sed dignissim nunc, eget ullamcorper ex. In eu arcu ultrices, pellentesque urna eu, vehicula purus. Nam dictum fringilla metus vel vestibulum. Aenean diam libero, scelerisque a dui suscipit, iaculis porttitor enim. Nullam eget augue vitae velit condimentum posuere id ac erat. Praesent molestie dolor eu ipsum euismod lacinia. Nam ultrices iaculis velit, vitae hendrerit nulla sagittis quis. Pellentesque dignissim ullamcorper urna, eu ultrices est consectetur eu. Integer sit amet consectetur velit. Proin sit amet elementum dui. Mauris in tempor ante. Integer in efficitur ligula. Aliquam dapibus nulla sit amet feugiat iaculis.",
+                  "type": "unstyled",
+                  "depth": 0,
+                  "inlineStyleRanges": [],
+                  "entityRanges": [],
+                  "data": {}
+                },
+                {
+                  "key": "df8vv",
+                  "text": "Nunc mollis quis purus ut rutrum. Nullam laoreet ut dolor in commodo. Integer dignissim, ipsum id vulputate placerat, orci elit scelerisque metus, non convallis urna enim eu augue. In hac habitasse platea dictumst. Nulla facilisi. In vestibulum aliquam mauris pharetra tincidunt. In a elit sodales dui scelerisque luctus. Etiam elementum eros sit amet dui sagittis, sit amet interdum velit lacinia. Donec tortor justo, rhoncus ac augue id, tincidunt tempor mi. In semper tristique pretium. Cras vel aliquam mauris. In a turpis turpis.",
+                  "type": "unstyled",
+                  "depth": 0,
+                  "inlineStyleRanges": [],
+                  "entityRanges": [],
+                  "data": {}
+                },
+                {
+                  "key": "55mk8",
+                  "text": "Quisque sit amet iaculis odio, vel interdum ex. Nam feugiat rhoncus ex, eleifend rhoncus justo rutrum blandit. Praesent efficitur sapien id leo luctus ultricies. Morbi ut eleifend urna, mollis dignissim nibh. Morbi sodales, ante vel pretium tristique, lacus dolor rhoncus enim, in efficitur felis tortor in augue. Mauris sit amet convallis leo. Suspendisse tempor sodales convallis. Pellentesque lacus ante, euismod id tincidunt sed, auctor et purus. Curabitur at ullamcorper ligula. Duis tempus dolor ut turpis vestibulum, id eleifend justo efficitur. Vestibulum facilisis tincidunt augue. Fusce elit nunc, consequat in odio sed, suscipit ullamcorper nunc. ",
+                  "type": "unstyled",
+                  "depth": 0,
+                  "inlineStyleRanges": [],
+                  "entityRanges": [],
+                  "data": {}
+                }
+              ],
+              "entityMap": {}
+            }
+          ]
+        }
+      ],
       "settings": {}
     },
     {
@@ -511,7 +568,28 @@
         }
       ],
       "selectedChapterId": 1,
-      "characters": [],
+      "characters": [
+        {
+          "id": 1747158950341,
+          "name": "Amerstak",
+          "notes": [
+            {
+              "blocks": [
+                {
+                  "key": "6ncv0",
+                  "text": "",
+                  "type": "unstyled",
+                  "depth": 0,
+                  "inlineStyleRanges": [],
+                  "entityRanges": [],
+                  "data": {}
+                }
+              ],
+              "entityMap": {}
+            }
+          ]
+        }
+      ],
       "locations": [],
       "plotPoints": [],
       "settings": {}
@@ -567,5 +645,5 @@
       "settings": {}
     }
   ],
-  "selectedBookId": 1
+  "selectedBookId": 1740249291467
 }
