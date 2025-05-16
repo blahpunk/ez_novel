@@ -1,15 +1,48 @@
-# Node modules (for both client and server)
-**/node_modules
+# Node.js dependencies
+node_modules/
+client/node_modules/
+server/node_modules/
 
-# Saved data (if your saved data is in server/data.json)
-server/data.json
-
-# Build artifacts
-client/build
+# Build output
+client/build/
+server/dist/
 
 # Logs
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# Environment files (if not needed)
-*.env
+# Runtime data
+*.pid
+*.seed
+*.pid.lock
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.env.*
+
+# Editor/IDE metadata
+.vscode/
+.idea/
+
+# App-specific sensitive files
+server/data/data.json
+server/data/data.json.bak
+
+# Package locks (optional if you want reproducible builds)
+# Remove below if you want to track these:
+# package-lock.json
+# client/package-lock.json
+# server/package-lock.json
+
+# PDFs and output docs
+*.pdf
+
+# Backup files
+*.bak
 
