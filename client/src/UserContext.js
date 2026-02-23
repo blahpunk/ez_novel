@@ -1,36 +1,42 @@
 import React, { createContext, useState, useEffect } from 'react';
+import axios from 'axios';
 
 const UserContext = createContext();
 
 export function UserProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [authRequired, setAuthRequired] = useState(false);
 
   useEffect(() => {
-    const cookies = document.cookie.split(';').map(c => c.trim());
-    const userCookie = cookies.find(c => c.startsWith('user='));
+    axios
+      .get('/api/me', { timeout: 10000, withCredentials: true })
+      .then((response) => {
+        setUser(response.data?.user || null);
+        setAuthRequired(false);
+      })
+      .catch((err) => {
+        const status = err?.response?.status;
+        if (status === 401) {
+          setAuthRequired(true);
+          return;
+        }
 
-    if (userCookie) {
-      try {
-        const base64 = decodeURIComponent(userCookie.split('=')[1]);
-        const json = atob(base64);
-        const parsed = JSON.parse(json);
-        setUser(parsed);
-      } catch (err) {
-        console.error('Failed to parse user cookie', err);
-      }
-    } else {
-      window.location.href = `https://secure.blahpunk.com/oauth_login?next=${encodeURIComponent(window.location.href)}`;
-    }
+        console.error('Auth check failed', err);
+      })
+      .finally(() => {
+        setAuthLoading(false);
+      });
   }, []);
 
   const logout = () => {
     setUser(null);
     document.cookie = 'user=; Max-Age=0; path=/; domain=.blahpunk.com; secure; samesite=None';
-    window.location.href = `https://secure.blahpunk.com/logout`;
+    window.location.href = 'https://secure.blahpunk.com/logout';
   };
 
   return (
-    <UserContext.Provider value={{ user, logout }}>
+    <UserContext.Provider value={{ user, authLoading, authRequired, logout }}>
       {children}
     </UserContext.Provider>
   );

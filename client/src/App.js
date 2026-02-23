@@ -1,4 +1,3 @@
-// client/src/App.js
 import React, { useEffect, useMemo, useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import TopMenu from './components/TopMenu';
@@ -50,6 +49,33 @@ const LogoutButton = styled.button`
   }
 `;
 
+const AuthGate = styled.div`
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px;
+  background: linear-gradient(180deg, #121212 0%, #1a1a1a 100%);
+  color: #f0f0f0;
+  text-align: center;
+`;
+
+const LoginButton = styled.a`
+  display: inline-block;
+  background: #3b82f6;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 10px 14px;
+  border-radius: 6px;
+
+  &:hover {
+    background: #2563eb;
+  }
+`;
+
 function App() {
   const dispatch = useDispatch();
   const { books, selectedBookId } = useSelector(
@@ -61,40 +87,62 @@ function App() {
   );
   const novelData = useMemo(() => ({ books, selectedBookId }), [books, selectedBookId]);
 
-  const { user, logout } = useContext(UserContext);
+  const { user, authLoading, authRequired, logout } = useContext(UserContext);
 
-  // Fetch initial data on mount.
   useEffect(() => {
+    if (!user) return;
+
     axios
-      .get('/api/novel', { timeout: 10000 })
+      .get('/api/novel', { timeout: 10000, withCredentials: true })
       .then((response) => {
         dispatch(setBooks(response.data));
       })
       .catch((err) => console.error('Error fetching data', err));
-  }, [dispatch]);
+  }, [dispatch, user]);
 
-  // Create a debounced save function.
   const debouncedSave = useMemo(
     () =>
       debounce((data) => {
+        if (!user) return;
+
         axios
-          .post('/api/novel', data, { timeout: 10000 })
+          .post('/api/novel', data, { timeout: 10000, withCredentials: true })
           .then(() => console.log('Auto-saved'))
           .catch((err) => console.error('Save error', err));
       }, 1000),
-    []
+    [user]
   );
 
-  // Auto-save Redux state changes.
   useEffect(() => {
+    if (!user) return;
     debouncedSave(novelData);
-  }, [novelData, debouncedSave]);
+  }, [novelData, debouncedSave, user]);
 
   useEffect(() => {
     return () => {
       debouncedSave.flush();
     };
   }, [debouncedSave]);
+
+  if (authLoading) {
+    return <AuthGate>Checking sign-in...</AuthGate>;
+  }
+
+  if (!user && authRequired) {
+    const loginUrl = `https://secure.blahpunk.com/oauth_login?next=${encodeURIComponent(window.location.href)}`;
+
+    return (
+      <AuthGate>
+        <h1>EZ Novel</h1>
+        <p>Sign in to continue.</p>
+        <LoginButton href={loginUrl}>Continue with Google</LoginButton>
+      </AuthGate>
+    );
+  }
+
+  if (!user) {
+    return <AuthGate>Unable to verify sign-in right now.</AuthGate>;
+  }
 
   return (
     <Router>
