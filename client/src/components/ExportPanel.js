@@ -69,6 +69,7 @@ function ExportPanel({ compact = false }) {
     const contentWidthPx = mmToPx(pageWidthMm - marginMm * 2);
 
     const bookTitle = selectedBook ? selectedBook.title : 'Untitled';
+    doc.setTextColor(0, 0, 0);
     doc.setFontSize(24);
     doc.text(bookTitle, pageWidthMm / 2, pageHeightMm / 2, { align: 'center' });
 
@@ -83,6 +84,7 @@ function ExportPanel({ compact = false }) {
       }
 
       doc.setFontSize(12);
+      doc.setTextColor(0, 0, 0);
       doc.text(chapter.title, pageWidthMm / 2, 20, { align: 'center' });
 
       const tempDiv = document.createElement('div');
@@ -97,8 +99,22 @@ function ExportPanel({ compact = false }) {
       tempDiv.style.wordWrap = 'break-word';
       tempDiv.style.whiteSpace = 'pre-wrap';
 
-      tempDiv.innerHTML =
+      const exportStyles = `
+        <style>
+          .pdf-export-content, .pdf-export-content * {
+            color: #000000 !important;
+            -webkit-text-fill-color: #000000 !important;
+            text-shadow: none !important;
+          }
+          .pdf-export-content a {
+            color: #000000 !important;
+            text-decoration: underline;
+          }
+        </style>
+      `;
+      const chapterHtml =
         chapter.content && typeof chapter.content === 'object' ? rawToHtml(chapter.content) : '(No content)';
+      tempDiv.innerHTML = `${exportStyles}<div class="pdf-export-content">${chapterHtml}</div>`;
 
       document.body.appendChild(tempDiv);
 
