@@ -99,6 +99,25 @@ const UtilityBlock = styled.div`
   }
 `;
 
+const HomeButton = styled.a`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 8px 11px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-decoration: none;
+  color: #082127;
+  background: linear-gradient(135deg, #5eead4, #2dd4bf);
+  transition: transform 180ms ease, filter 180ms ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.04);
+  }
+`;
+
 const SaveIndicator = styled.div`
   border: 1px solid
     ${({ tone }) => (tone === 'ok' ? 'rgba(45, 212, 191, 0.52)' : tone === 'warn' ? 'rgba(245, 158, 11, 0.52)' : 'rgba(239, 68, 68, 0.5)')};
@@ -187,7 +206,7 @@ const AuthPanel = styled.section`
   animation: fadeInUp 380ms ease both;
 
   h1 {
-    margin: 0 0 8px;
+    margin: 0;
     font-family: var(--font-display);
     color: #fff;
     font-size: clamp(1.45rem, 3.4vw, 2rem);
@@ -198,6 +217,20 @@ const AuthPanel = styled.section`
     color: var(--text-secondary);
     line-height: 1.45;
   }
+`;
+
+const AuthHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+`;
+
+const AuthHomeButton = styled(HomeButton)`
+  padding: 7px 11px;
+  white-space: nowrap;
+  flex-shrink: 0;
 `;
 
 const AuthList = styled.ul`
@@ -346,7 +379,10 @@ function App() {
     return (
       <AuthGate>
         <AuthPanel>
-          <h1>Preparing your workspace</h1>
+          <AuthHeader>
+            <h1>Preparing your workspace</h1>
+            <AuthHomeButton href="https://blahpunk.com">Home</AuthHomeButton>
+          </AuthHeader>
           <p>Loading editor session and connected writing projects.</p>
         </AuthPanel>
       </AuthGate>
@@ -359,7 +395,10 @@ function App() {
     return (
       <AuthGate>
         <AuthPanel>
-          <h1>Write with structure, not friction</h1>
+          <AuthHeader>
+            <h1>Write with structure, not friction</h1>
+            <AuthHomeButton href="https://blahpunk.com">Home</AuthHomeButton>
+          </AuthHeader>
           <p>
             Your workspace is set up for drafting, planning, character management, and export. Sign in to continue where
             you left off.
@@ -379,7 +418,10 @@ function App() {
     return (
       <AuthGate>
         <AuthPanel>
-          <h1>Sign-in check failed</h1>
+          <AuthHeader>
+            <h1>Sign-in check failed</h1>
+            <AuthHomeButton href="https://blahpunk.com">Home</AuthHomeButton>
+          </AuthHeader>
           <p>Unable to verify your session right now.</p>
         </AuthPanel>
       </AuthGate>
@@ -414,6 +456,7 @@ function App() {
             </StatRow>
 
             <UtilityBlock>
+              <HomeButton href="https://blahpunk.com">Home</HomeButton>
               <SaveIndicator tone={saveTone}>{saveLabel}</SaveIndicator>
               <UserPill>
                 <UserDetails>

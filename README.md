@@ -1,160 +1,93 @@
 # EZ Novel
 
-EZ Novel is a full-featured novel writing app designed to help you create, manage, and export your novel with ease. With its rich text editor, real-time autosave, and comprehensive management for chapters, characters, locations, and plot points, EZ Novel offers a powerful environment for authors to focus on their creativity.
+EZ Novel is a browser-based writing workspace for drafting and organizing novels across books, chapters, characters, locations, and plot points.
 
-## Features
+## Current Highlights
 
-- **Rich Text Editor:** Format your chapters with inline styles, font sizes, lists, text alignment, links, history, and more.
-- **Chapter Management:** Create, edit, and manage chapters with real-time autosave.
-- **Book Organization:** Manage multiple books, each with its own chapters, characters, locations, and plot points.
-- **Export Options:** Export your novel as a PDF (and soon as an ePub) with a customizable filename that includes the book title and a timestamp.
-- **Real-Time Autosave:** All your changes are automatically saved as you write.
-
-## Screenshots
-
-![Screenshot 1](screenshots/img-1.png)
-![Screenshot 2](screenshots/img-2.png)
-![Screenshot 2](screenshots/img-3.png)
+- Rich text chapter editor with autosave.
+- Multi-book workspace with fast switching.
+- Book cards are click-to-activate.
+- Book cards support rename and guarded delete:
+  - Red `Delete` button on each card.
+  - Confirmation requires typing `DELETE` (all caps).
+  - Shows deletion summary (chapters, words, characters, locations, plot points) before removal.
+- Header includes a `Home` button linking to `https://blahpunk.com`.
+- Export panel for manuscript PDF output.
+- OAuth-based authentication flow.
 
 ## Project Structure
-````
+
+```text
 ez_novel/
-├── client/
-│   ├── package.json
-│   ├── package-lock.json
-│   ├── public/
-│   │   ├── favicon.ico
-│   │   ├── index.html
-│   │   ├── logo192.png
-│   │   ├── logo512.png
-│   │   ├── manifest.json
-│   │   └── robots.txt
-│   ├── README.md
-│   └── src/
-│       ├── App.css
-│       ├── App.js
-│       ├── index.css
-│       ├── index.js
-│       ├── components/
-│       │   ├── BookSelector.js
-│       │   ├── ChapterEditor.js
-│       │   ├── ChaptersManager.js
-│       │   ├── Editor.js
-│       │   ├── ExportPanel.js
-│       │   ├── RichTextEditor.js
-│       │   ├── SettingsPanel.js
-│       │   ├── TopMenu.js
-│       │   └── tabs/
-│       │       ├── CharactersTab.js
-│       │       ├── LocationsTab.js
-│       │       └── PlotTab.js
-│       ├── hooks/
-│       │   └── useDebounce.js
-│       ├── pages/
-│       │   ├── BooksPage.js
-│       │   ├── ChaptersPage.js
-│       │   ├── CharactersPage.js
-│       │   ├── LocationsPage.js
-│       │   └── PlotPage.js
-│       ├── redux/
-│       │   ├── actions.js
-│       │   ├── booksReducer.js
-│       │   ├── reducers/
-│       │   │   ├── chapterReducer.js
-│       │   │   ├── characterReducer.js
-│       │   │   ├── locationReducer.js
-│       │   │   ├── plotReducer.js
-│       │   │   └── settingsReducer.js
-│       │   └── store.js
-│       ├── store/
-│       │   ├── novelSlice.js
-│       │   └── store.js
-│       └── utils/
-│           ├── rawToHtml.js
-│           └── rawToText.js
-└── server/
-    ├── package.json
-    ├── package-lock.json
-    ├── data.json
-    ├── server.js
-    ├── index.js
-    ├── models/
-    │   └── Chapter.js
-    └── routes/
-        └── novel.js
-````
+  client/   # React frontend
+  server/   # Node/Express API
+  screenshots/
+```
 
-
-## Installation
+## Local Development
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) (v14 or later recommended)
-- [npm](https://www.npmjs.com/)
+- Node.js 18+
+- npm
 
-### Setup
+### Install
 
-1. **Clone the Repository:**
-
-   ```bash
-   git clone https://github.com/blahpunk/ez_novel.git
-   cd ez_novel
+```bash
+# from repo root
+cd server && npm install
+cd ../client && npm install
 ```
-    Install Server Dependencies:
 
+### Run
+
+```bash
+# terminal 1
 cd server
-npm install
+npm start
 
-2. **Install Client Dependencies:**
-
-   ```bash
-    cd ../client
-    npm install
+# terminal 2
+cd client
+npm start
 ```
 
-### Running the Application
+Default ports:
 
-You need to run both the client and server applications concurrently.
-Server
+- API: `7385`
+- Client/dev: `7692` (or CRA-assigned local dev port)
 
-In one terminal window, start the server:
+## Deployment Notes (punknet)
 
-   ```bash
-	cd ez_novel/server
-	npm start
+Typical frontend deploy flow:
+
+```bash
+cd /opt/ez_novel/client
+npm run build
+pm2 restart ez-novel --update-env
 ```
 
-By default, the server runs on port 7385. It handles API requests and saves your novel data to a data.json file.
-Client
+API process:
 
-In another terminal window, start the client:
-   ```bash
-	cd ez_novel/client
-	npm start
+```bash
+pm2 restart ez-novel-api --update-env
 ```
 
-The client will run on its configured port (e.g., 7692) and open in your default browser. You can now use EZ Novel to write and manage your novel.
-Usage
+## Security Notes
 
-    Books: Create and manage books, edit titles, and switch between them.
-    Chapters: Write your chapters in a flexible editor that autosaves your work in real time.
-    Characters, Locations, & Plot Points: Organize your novel details in dedicated sections.
-    Export: Generate a PDF of your novel with a title page and custom filename (book title plus timestamp).
+- API auth now verifies both `user` and `user_sig` cookies via HMAC (`SECURE_AUTH_SECRET`).
+- Novel data files are encrypted at rest with AES-256-GCM (`DATA_ENCRYPTION_KEY`).
+- API CORS is allowlisted with `ALLOWED_ORIGINS`.
 
-Filename and Export
+Required server env vars:
 
-When exporting your novel to PDF, the file will be named using the book title (with invalid characters replaced by hyphens) followed by a timestamp in the format YYYYMMDDHrMnSe (using military time).
-Environment Variables
+- `SECURE_AUTH_SECRET`: must match the OAuth signer secret used by `secure.blahpunk.com`.
+- `DATA_ENCRYPTION_KEY`: encryption key material for at-rest data (falls back to `SECURE_AUTH_SECRET` if omitted).
+- `ALLOWED_ORIGINS`: comma-separated frontend origins allowed to call the API.
 
-If needed, create a .env file in the server directory to customize settings such as the server port or database connection. For example:
+Important limitation:
 
-PORT=7385
+- Google login without a separate user-held secret is not true zero-knowledge encryption. It protects against database/file leaks and cookie forgery, but a full server operator can still decrypt.
 
-Contributing
+## License
 
-Contributions are welcome! If you have any bug fixes, feature requests, or improvements, please open an issue or submit a pull request.
-License
-
-This project is licensed under the MIT License.
-
-
+MIT
