@@ -3,6 +3,7 @@ export const SET_BOOKS = 'SET_BOOKS';
 export const ADD_BOOK = 'ADD_BOOK';
 export const SELECT_BOOK = 'SELECT_BOOK';
 export const UPDATE_BOOK_TITLE = 'UPDATE_BOOK_TITLE';
+export const REMOVE_BOOK = 'REMOVE_BOOK';
 
 // CHAPTER actions
 export const ADD_CHAPTER = 'ADD_CHAPTER';
@@ -10,6 +11,7 @@ export const REMOVE_CHAPTER = 'REMOVE_CHAPTER';
 export const SELECT_CHAPTER = 'SELECT_CHAPTER';
 export const UPDATE_CHAPTER_TITLE = 'UPDATE_CHAPTER_TITLE';
 export const UPDATE_CHAPTER_CONTENT = 'UPDATE_CHAPTER_CONTENT';
+export const UPDATE_CHAPTER_GOAL = 'UPDATE_CHAPTER_GOAL';
 
 // CHARACTER actions
 export const ADD_CHARACTER = 'ADD_CHARACTER';
@@ -50,6 +52,11 @@ export const updateBookTitle = (bookId, title) => ({
   payload: { bookId, title },
 });
 
+export const removeBook = (bookId) => ({
+  type: REMOVE_BOOK,
+  payload: bookId,
+});
+
 // Chapter actions
 export const addChapter = (customTitle = null) => ({
   type: ADD_CHAPTER,
@@ -74,6 +81,11 @@ export const updateChapterTitle = (id, title) => ({
 export const updateChapterContent = (id, content) => ({
   type: UPDATE_CHAPTER_CONTENT,
   payload: { id, content },
+});
+
+export const updateChapterGoal = (id, goalWords) => ({
+  type: UPDATE_CHAPTER_GOAL,
+  payload: { id, goalWords },
 });
 
 // Character actions

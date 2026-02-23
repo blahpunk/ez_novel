@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Editor } from 'react-draft-wysiwyg';
 import { EditorState, convertFromRaw, convertToRaw } from 'draft-js';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
@@ -11,11 +11,17 @@ function RichTextEditor({
   editorStyle,
   editorState: controlledEditorState,
   onEditorStateChange,
+  placeholder,
+  ...rest
 }) {
   const [localEditorState, setLocalEditorState] = useState(() => {
     if (controlledEditorState) return controlledEditorState;
     if (initialContent && typeof initialContent === 'object') {
-      return EditorState.createWithContent(convertFromRaw(initialContent));
+      try {
+        return EditorState.createWithContent(convertFromRaw(initialContent));
+      } catch {
+        return EditorState.createEmpty();
+      }
     }
     return EditorState.createEmpty();
   });
@@ -42,6 +48,9 @@ function RichTextEditor({
       toolbar={toolbarConfig}
       wrapperStyle={wrapperStyle}
       editorStyle={editorStyle}
+      placeholder={placeholder}
+      toolbarOnFocus={false}
+      {...rest}
     />
   );
 }

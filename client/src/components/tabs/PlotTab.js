@@ -5,199 +5,205 @@ import styled from 'styled-components';
 import RichTextEditor from '../RichTextEditor';
 import { rawToHtml } from '../../utils/rawToHtml';
 
-const FormRow = styled.div`
+const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  margin-bottom: 10px;
+  gap: 12px;
 `;
 
-const Input = styled.input`
-  padding: 5px;
-  font-size: 0.9rem;
-  width: 100%;
-  background-color: #2e2e2e;
-  color: #e0e0e0;
-  border: 1px solid #444;
+const SectionTitle = styled.h4`
+  margin: 0;
+  color: #f8fbff;
+  font-family: var(--font-display);
+`;
+
+const ItemList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+
+const ItemCard = styled.article`
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 10px;
+`;
+
+const ItemHeading = styled.div`
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #f9fcff;
+  margin-bottom: 6px;
 `;
 
 const NoteList = styled.ul`
-  list-style-type: disc;
-  padding-left: 20px;
+  list-style: disc;
   margin: 0;
-  line-height: 1.4;
+  padding-left: 18px;
+  color: var(--text-secondary);
 `;
 
-const ListItem = styled.li`
+const FormRow = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  padding: 5px;
+  gap: 8px;
+`;
+
+const Input = styled.input`
   font-size: 0.9rem;
-  color: #e0e0e0;
-  border-bottom: 1px solid #333;
 `;
 
-const Button = styled.button`
-  padding: 5px 8px;
-  font-size: 0.8rem;
-  background: #00ff99;
-  color: #121212;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-  margin-right: 5px;
+const ButtonRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
 `;
 
-const NoteDisplay = styled.div`
-  white-space: pre-wrap;
+const TinyButton = styled.button`
+  padding: 7px 10px;
+  font-size: 0.76rem;
+  border-radius: 9px;
+`;
+
+const GhostButton = styled(TinyButton)`
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+`;
+
+const DangerButton = styled(TinyButton)`
+  color: #ffd9d9;
+  background: rgba(239, 68, 68, 0.16);
+  border: 1px solid rgba(239, 68, 68, 0.36);
 `;
 
 function PlotTab() {
   const dispatch = useDispatch();
-  const selectedBook = useSelector(state =>
-    state.books.find(b => b.id === state.selectedBookId)
-  );
+  const selectedBook = useSelector((state) => state.books.find((book) => book.id === state.selectedBookId));
   const plotPoints = selectedBook ? selectedBook.plotPoints : [];
+
   const [newText, setNewText] = useState('');
   const [newNote, setNewNote] = useState(null);
   const [newNoteKey, setNewNoteKey] = useState(0);
-  
+
   const [editingId, setEditingId] = useState(null);
   const [editText, setEditText] = useState('');
   const [editNotes, setEditNotes] = useState([]);
 
   const fullToolbar = {
-    options: ['inline', 'fontSize', 'blockType', 'list', 'textAlign', 'colorPicker', 'link', 'emoji', 'history'],
-    inline: { inDropdown: false, options: ['bold', 'italic', 'underline', 'strikethrough', 'monospace'] },
-    fontSize: { inDropdown: false, options: [8, 9, 10, 11, 12, 14, 16, 18, 24] },
-    blockType: { inDropdown: false, options: ['Normal', 'H1', 'H2', 'H3', 'Blockquote'] },
+    options: ['inline', 'fontSize', 'blockType', 'list', 'textAlign', 'link', 'history'],
+    inline: { inDropdown: false, options: ['bold', 'italic', 'underline', 'strikethrough'] },
+    fontSize: { inDropdown: false, options: [12, 14, 16, 18, 20] },
+    blockType: { inDropdown: true, options: ['Normal', 'H2', 'H3', 'Blockquote'] },
     list: { inDropdown: false, options: ['unordered', 'ordered'] },
-    textAlign: { inDropdown: false, options: ['left', 'center', 'right', 'justify'] },
-    colorPicker: { inDropdown: false },
-    link: { inDropdown: false },
-    emoji: { inDropdown: false },
+    textAlign: { inDropdown: true },
+    link: { inDropdown: true },
     history: { inDropdown: false },
   };
 
   const handleAdd = () => {
-    if (newText.trim()) {
-      const notes = newNote ? [newNote] : [];
-      dispatch(addPlotPoint(newText, notes));
-      setNewText('');
-      setNewNote(null);
-      setNewNoteKey(prev => prev + 1);
-    }
+    if (!newText.trim()) return;
+    const notes = newNote ? [newNote] : [];
+    dispatch(addPlotPoint(newText, notes));
+    setNewText('');
+    setNewNote(null);
+    setNewNoteKey((value) => value + 1);
   };
 
-  const renderPlotList = () => (
-    <NoteList>
-      {plotPoints.map(pt => (
-        <ListItem key={pt.id}>
-          {editingId === pt.id ? (
-            <>
-              <Input
-                type="text"
-                value={editText}
-                onChange={(e) => setEditText(e.target.value)}
-              />
-              {editNotes.map((note, index) => (
-                <div key={index} style={{ border: '1px solid #ccc', padding: '5px', marginBottom: '5px' }}>
-                  <RichTextEditor
-                    key={index}
-                    initialContent={note}
-                    onChange={(content) => {
-                      const updated = [...editNotes];
-                      updated[index] = content;
-                      setEditNotes(updated);
-                    }}
-                    toolbarConfig={fullToolbar}
-                    wrapperStyle={{ minHeight: '80px' }}
-                    editorStyle={{
-                      padding: '5px',
-                      minHeight: '60px',
-                      backgroundColor: '#2e2e2e',
-                      color: '#e0e0e0',
-                      border: '1px solid #444',
-                      lineHeight: '1.4',
-                    }}
-                  />
-                </div>
-              ))}
-              <Button onClick={() => setEditNotes([...editNotes, null])}>Add Note</Button>
-              <div>
-                <Button onClick={() => {
-                  const notes = editNotes.filter(n => n && JSON.stringify(n) !== '{}');
-                  dispatch(updatePlotPoint(pt.id, editText, notes));
-                  setEditingId(null);
-                }}>Save</Button>
-                <Button onClick={() => setEditingId(null)}>Cancel</Button>
-              </div>
-            </>
-          ) : (
-            <>
-              <div><strong>{pt.text}</strong></div>
-              <NoteList>
-                {pt.notes && pt.notes.length > 0 ? (
-                  pt.notes.map((n, i) => (
-                    <li key={i}>
-                      <NoteDisplay dangerouslySetInnerHTML={{ __html: rawToHtml(n) }} />
-                    </li>
-                  ))
-                ) : (
-                  <li>No notes</li>
-                )}
-              </NoteList>
-              <div>
-                <Button onClick={() => {
-                  setEditingId(pt.id);
-                  setEditText(pt.text);
-                  setEditNotes(pt.notes && pt.notes.length > 0 ? [...pt.notes] : [null]);
-                }}>Edit</Button>
-                <Button onClick={() => dispatch(removePlotPoint(pt.id))}>Remove</Button>
-              </div>
-            </>
-          )}
-        </ListItem>
-      ))}
-    </NoteList>
-  );
+  const startEditing = (plotPoint) => {
+    setEditingId(plotPoint.id);
+    setEditText(plotPoint.text);
+    setEditNotes(plotPoint.notes && plotPoint.notes.length > 0 ? [...plotPoint.notes] : [null]);
+  };
 
-  const renderAddForm = () => (
-    <FormRow>
-      <Input
-        type="text"
-        placeholder="Plot Title"
-        value={newText}
-        onChange={(e) => setNewText(e.target.value)}
-      />
-      <div style={{ border: '1px solid #ccc', padding: '5px' }}>
-        <RichTextEditor
-          key={`newNote-${newNoteKey}`}
-          initialContent={newNote}
-          onChange={setNewNote}
-          toolbarConfig={fullToolbar}
-          wrapperStyle={{ minHeight: '80px' }}
-          editorStyle={{
-            padding: '5px',
-            minHeight: '60px',
-            backgroundColor: '#2e2e2e',
-            color: '#e0e0e0',
-            border: '1px solid #444',
-          }}
-        />
-      </div>
-      <Button onClick={handleAdd}>Add Plot Point</Button>
-    </FormRow>
-  );
+  const updateEditNoteField = (index, content) => {
+    const updated = [...editNotes];
+    updated[index] = content;
+    setEditNotes(updated);
+  };
+
+  const saveEdit = (id) => {
+    const notes = editNotes.filter((note) => note && JSON.stringify(note) !== '{}');
+    dispatch(updatePlotPoint(id, editText, notes));
+    setEditingId(null);
+  };
 
   return (
-    <div>
-      <h4 style={{ color: '#fff' }}>Plot Points</h4>
-      {renderPlotList()}
-      <h5 style={{ color: '#fff' }}>Add New Plot Point</h5>
-      {renderAddForm()}
-    </div>
+    <Wrapper>
+      <SectionTitle>Plot Points</SectionTitle>
+
+      <ItemList>
+        {plotPoints.map((plotPoint) => (
+          <ItemCard key={plotPoint.id}>
+            {editingId === plotPoint.id ? (
+              <>
+                <Input type="text" value={editText} onChange={(event) => setEditText(event.target.value)} />
+                {editNotes.map((note, index) => (
+                  <div key={index} style={{ border: '1px solid rgba(255,255,255,0.12)', borderRadius: '10px', padding: '8px' }}>
+                    <RichTextEditor
+                      key={index}
+                      initialContent={note}
+                      onChange={(content) => updateEditNoteField(index, content)}
+                      toolbarConfig={fullToolbar}
+                      wrapperStyle={{ minHeight: '90px' }}
+                      editorStyle={{ padding: '6px', minHeight: '66px', color: '#e8f0ff', lineHeight: 1.45 }}
+                    />
+                  </div>
+                ))}
+                <ButtonRow>
+                  <GhostButton onClick={() => setEditNotes([...editNotes, null])}>Add note</GhostButton>
+                  <TinyButton onClick={() => saveEdit(plotPoint.id)}>Save</TinyButton>
+                  <GhostButton onClick={() => setEditingId(null)}>Cancel</GhostButton>
+                </ButtonRow>
+              </>
+            ) : (
+              <>
+                <ItemHeading>{plotPoint.text}</ItemHeading>
+                <NoteList>
+                  {plotPoint.notes && plotPoint.notes.length > 0 ? (
+                    plotPoint.notes.map((note, index) => (
+                      <li key={index}>
+                        <div dangerouslySetInnerHTML={{ __html: rawToHtml(note) }} />
+                      </li>
+                    ))
+                  ) : (
+                    <li>No notes yet</li>
+                  )}
+                </NoteList>
+                <ButtonRow style={{ marginTop: '8px' }}>
+                  <GhostButton onClick={() => startEditing(plotPoint)}>Edit</GhostButton>
+                  <DangerButton onClick={() => dispatch(removePlotPoint(plotPoint.id))}>Remove</DangerButton>
+                </ButtonRow>
+              </>
+            )}
+          </ItemCard>
+        ))}
+      </ItemList>
+
+      <SectionTitle style={{ marginTop: '4px' }}>Add Plot Point</SectionTitle>
+      <ItemCard>
+        <FormRow>
+          <Input
+            type="text"
+            placeholder="Plot point title"
+            value={newText}
+            onChange={(event) => setNewText(event.target.value)}
+          />
+          <div style={{ border: '1px solid rgba(255,255,255,0.12)', borderRadius: '10px', padding: '8px' }}>
+            <RichTextEditor
+              key={`new-plot-note-${newNoteKey}`}
+              initialContent={newNote}
+              onChange={setNewNote}
+              toolbarConfig={fullToolbar}
+              wrapperStyle={{ minHeight: '90px' }}
+              editorStyle={{ padding: '6px', minHeight: '66px', color: '#e8f0ff', lineHeight: 1.45 }}
+            />
+          </div>
+          <TinyButton onClick={handleAdd}>Add Plot Point</TinyButton>
+        </FormRow>
+      </ItemCard>
+    </Wrapper>
   );
 }
 

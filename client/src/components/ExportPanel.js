@@ -1,4 +1,3 @@
-// client/src/components/ExportPanel.js
 import React from 'react';
 import styled from 'styled-components';
 import { jsPDF } from 'jspdf';
@@ -6,32 +5,45 @@ import html2canvas from 'html2canvas';
 import { useSelector } from 'react-redux';
 import { rawToHtml } from '../utils/rawToHtml';
 
-const ExportContainer = styled.div`
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background-color: #222;
-  text-align: center;
-  padding: 10px 0;
-  z-index: 9999;
-
-  button {
-    margin: 0 5px;
-    padding: 5px 10px;
-    font-size: 0.9rem;
-    background: #00ff99;
-    color: #121212;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-  }
+const ExportContainer = styled.section`
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  background: rgba(5, 10, 20, 0.68);
+  box-shadow: var(--shadow-soft);
+  padding: ${({ compact }) => (compact ? '12px' : '16px')};
 `;
 
-// Utility function to sanitize the book title and append date/time.
+const Heading = styled.h4`
+  margin: 0 0 4px;
+  color: #f7fbff;
+  font-family: var(--font-display);
+`;
+
+const Subtext = styled.p`
+  margin: 0 0 12px;
+  font-size: 0.84rem;
+  color: var(--text-muted);
+`;
+
+const Actions = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+`;
+
+const ActionButton = styled.button`
+  padding: 9px 12px;
+  font-size: 0.86rem;
+`;
+
+const SecondaryButton = styled(ActionButton)`
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.16);
+`;
+
 const generateFilename = (title) => {
-  // Replace invalid characters:  \/ : * ? " < > | 
-  const sanitizedTitle = title.replace(/[\\\/:*?"<>|]/g, '-');
+  const sanitizedTitle = title.replace(/[\\/:*?"<>|]/g, '-');
   const now = new Date();
   const pad = (num) => String(num).padStart(2, '0');
   const formattedDate =
@@ -44,23 +56,18 @@ const generateFilename = (title) => {
   return `${sanitizedTitle}-${formattedDate}.pdf`;
 };
 
-function ExportPanel() {
-  const selectedBook = useSelector((state) =>
-    state.books.find((b) => b.id === state.selectedBookId)
-  );
+function ExportPanel({ compact = false }) {
+  const selectedBook = useSelector((state) => state.books.find((book) => book.id === state.selectedBookId));
   const chapters = selectedBook ? selectedBook.chapters : [];
 
   const exportPDF = async () => {
-    // Create a new jsPDF instance (A4, portrait, mm units)
     const doc = new jsPDF('p', 'mm', 'a4');
     const pageWidthMm = doc.internal.pageSize.getWidth();
     const pageHeightMm = doc.internal.pageSize.getHeight();
     const marginMm = 10;
-    // Convert mm to pixels (1 mm ≈ 3.78 px)
     const mmToPx = (mm) => mm * 3.78;
     const contentWidthPx = mmToPx(pageWidthMm - marginMm * 2);
 
-    // ----- TITLE PAGE -----
     const bookTitle = selectedBook ? selectedBook.title : 'Untitled';
     doc.setFontSize(24);
     doc.text(bookTitle, pageWidthMm / 2, pageHeightMm / 2, { align: 'center' });
@@ -69,21 +76,21 @@ function ExportPanel() {
       doc.addPage();
     }
 
-    // ----- CHAPTER PAGES -----
-    for (let i = 0; i < chapters.length; i++) {
+    for (let i = 0; i < chapters.length; i += 1) {
       const chapter = chapters[i];
       if (i > 0) {
         doc.addPage();
       }
+
       doc.setFontSize(12);
       doc.text(chapter.title, pageWidthMm / 2, 20, { align: 'center' });
 
       const tempDiv = document.createElement('div');
       tempDiv.style.backgroundColor = '#ffffff';
       tempDiv.style.color = '#000000';
-      tempDiv.style.fontFamily = 'Arial, sans-serif';
-      tempDiv.style.fontSize = '10px'; // Enforce a 10px font size for export
-      tempDiv.style.lineHeight = '1.4';
+      tempDiv.style.fontFamily = 'Georgia, serif';
+      tempDiv.style.fontSize = '11px';
+      tempDiv.style.lineHeight = '1.45';
       tempDiv.style.padding = '10px';
       tempDiv.style.width = `${contentWidthPx}px`;
       tempDiv.style.boxSizing = 'border-box';
@@ -91,9 +98,7 @@ function ExportPanel() {
       tempDiv.style.whiteSpace = 'pre-wrap';
 
       tempDiv.innerHTML =
-        chapter.content && typeof chapter.content === 'object'
-          ? rawToHtml(chapter.content)
-          : '(No content)';
+        chapter.content && typeof chapter.content === 'object' ? rawToHtml(chapter.content) : '(No content)';
 
       document.body.appendChild(tempDiv);
 
@@ -106,15 +111,19 @@ function ExportPanel() {
       doc.addImage(imgData, 'PNG', marginMm, 30, pdfWidth, pdfHeight);
       document.body.removeChild(tempDiv);
     }
-    // Generate filename using the book title and current date/time.
+
     const filename = generateFilename(bookTitle);
     doc.save(filename);
   };
 
   return (
-    <ExportContainer>
-      <button onClick={exportPDF}>Export as PDF</button>
-      <button onClick={() => alert('Export as ePub coming soon!')}>Export as ePub</button>
+    <ExportContainer compact={compact}>
+      <Heading>Export manuscript</Heading>
+      <Subtext>Keep your latest draft ready for sharing, printing, or long-form review.</Subtext>
+      <Actions>
+        <ActionButton onClick={exportPDF}>Export PDF</ActionButton>
+        <SecondaryButton onClick={() => alert('Export as ePub is on the roadmap.')}>Export ePub</SecondaryButton>
+      </Actions>
     </ExportContainer>
   );
 }

@@ -32,7 +32,8 @@ export function UserProvider({ children }) {
   const logout = () => {
     setUser(null);
     document.cookie = 'user=; Max-Age=0; path=/; domain=.blahpunk.com; secure; samesite=None';
-    window.location.href = 'https://secure.blahpunk.com/logout';
+    const nextUrl = `${window.location.origin}/`;
+    window.location.href = `https://secure.blahpunk.com/logout?next=${encodeURIComponent(nextUrl)}`;
   };
 
   return (

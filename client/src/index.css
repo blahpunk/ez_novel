@@ -1,62 +1,228 @@
-/* Global body and font styles */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;600;700&display=swap');
+
+:root {
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Manrope', 'Segoe UI', Tahoma, sans-serif;
+
+  --bg-deep: #08111f;
+  --bg-base: #111b2e;
+  --bg-surface: rgba(255, 255, 255, 0.04);
+  --bg-surface-strong: rgba(255, 255, 255, 0.08);
+
+  --text-primary: #eef4ff;
+  --text-secondary: #d5deec;
+  --text-muted: #95a5bc;
+
+  --line-soft: rgba(255, 255, 255, 0.12);
+  --line-strong: rgba(255, 255, 255, 0.2);
+
+  --accent: #2dd4bf;
+  --accent-strong: #16a394;
+  --accent-warm: #f59e0b;
+  --danger: #ef4444;
+
+  --shadow-soft: 0 16px 44px rgba(0, 0, 0, 0.32);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family: var(--font-body);
+  font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #121212;
-  color: #e0e0e0;
+  color: var(--text-primary);
+  background:
+    radial-gradient(800px 360px at 8% -4%, rgba(45, 212, 191, 0.11) 0%, rgba(45, 212, 191, 0) 62%),
+    radial-gradient(760px 340px at 96% -6%, rgba(245, 158, 11, 0.09) 0%, rgba(245, 158, 11, 0) 68%),
+    linear-gradient(180deg, #091226 0%, #121d32 100%);
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+  background-size: 34px 34px;
+  mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 0.9), transparent 82%);
+  z-index: -1;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
+  letter-spacing: 0.2px;
+  margin-top: 0;
+}
+
+p {
+  color: var(--text-secondary);
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+input[type='text'],
+input[type='search'],
+textarea,
+select {
+  width: 100%;
+  border: 1px solid var(--line-soft);
+  border-radius: 12px;
+  background: rgba(5, 11, 21, 0.68);
+  color: var(--text-primary);
+  padding: 10px 12px;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+input[type='text']:focus,
+input[type='search']:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: rgba(45, 212, 191, 0.6);
+  box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.2);
+}
+
+button {
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--accent), #18b4a4);
+  color: #06232a;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: transform 170ms ease, filter 170ms ease, box-shadow 170ms ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+}
+
+button:active {
+  transform: translateY(0);
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  font-family: 'Cascadia Code', 'Consolas', monospace;
 }
 
-/* Global input and textarea dark theme */
-input[type="text"],
-textarea {
-  background-color: #2e2e2e;
-  color: #e0e0e0;
-  border: 1px solid #444;
-  padding: 5px;
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
 }
 
-/* react-draft-wysiwyg Overrides */
+::-webkit-scrollbar-thumb {
+  background: rgba(149, 165, 188, 0.4);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rdw-editor-wrapper {
+  min-height: 0;
+}
+
 .rdw-editor-toolbar {
-  background-color: #333 !important;
-  border: none !important;
+  border-radius: 12px !important;
+  border: 1px solid var(--line-soft) !important;
+  background: rgba(12, 21, 36, 0.92) !important;
   box-shadow: none !important;
+  margin-bottom: 10px !important;
+  padding: 6px !important;
 }
 
-.rdw-dropdown-wrapper,
 .rdw-option-wrapper,
+.rdw-dropdown-wrapper,
 .rdw-dropdownoptionwrapper {
-  background-color: #333 !important;
-  color: #e0e0e0 !important;
-  border: none !important;
-  padding: 0 5px !important;
+  border-radius: 8px !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  color: var(--text-secondary) !important;
+  min-height: 30px !important;
 }
 
 .rdw-option-wrapper:hover,
-.rdw-dropdownoptionwrapper:hover {
-  background-color: #444 !important;
+.rdw-dropdownoptionwrapper:hover,
+.rdw-dropdown-wrapper:hover {
+  background: rgba(45, 212, 191, 0.13) !important;
+  border-color: rgba(45, 212, 191, 0.4) !important;
 }
 
+.rdw-option-active,
 .rdw-dropdown-selectedtext {
-  color: #e0e0e0 !important;
+  color: #fff !important;
 }
 
-.rdw-dropdown-caret {
-  border-top: 4px solid #e0e0e0 !important;
+.rdw-editor-main {
+  border: 1px solid var(--line-soft);
+  border-radius: 12px;
+  background: rgba(8, 15, 26, 0.78);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
 }
 
-.rdw-option-wrapper, 
-.rdw-dropdownoptionwrapper {
-  height: 20px !important;
-  line-height: 20px !important;
+.DraftEditor-root {
+  min-height: 280px;
 }
 
-.rdw-inline-wrapper {
-  min-height: 20px !important;
+@media (max-width: 980px) {
+  .rdw-editor-toolbar {
+    overflow-x: auto;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 3;
+  }
+}
+
+@media (max-width: 640px) {
+  body {
+    font-size: 15px;
+  }
+
+  input[type='text'],
+  input[type='search'],
+  textarea,
+  select {
+    padding: 9px 11px;
+  }
 }

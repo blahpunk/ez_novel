@@ -1,114 +1,145 @@
-// client/src/pages/ChaptersPage.js
 import React, { useState, useEffect } from 'react';
 import Editor from '../components/Editor';
 import ChaptersManager from '../components/ChaptersManager';
 import ExportPanel from '../components/ExportPanel';
 import styled from 'styled-components';
 
-const PageContainer = styled.div`
+const PageShell = styled.section`
   display: flex;
   flex-direction: column;
-  height: 100vh;  
-  background-color: #1e1e1e;
-  padding: 20px;
-  box-sizing: border-box;
+  gap: 14px;
+  animation: fadeInUp 300ms ease both;
 `;
 
-const Title = styled.h2`
-  color: #fff;
-  text-align: center;
-  margin-bottom: 10px;
-`;
-
-const ContentArea = styled.div`
+const Hero = styled.div`
   display: flex;
-  flex: 1;
-  gap: 20px;
-  max-width: 1200px;
-  width: 100%;
-  margin: 0 auto;
-  box-sizing: border-box;
-  position: relative;
-`;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  background: rgba(7, 13, 24, 0.68);
+  box-shadow: var(--shadow-soft);
+  padding: 14px;
 
-const EditorContainer = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  background-color: #2e2e2e;
-  border-radius: 5px;
-  padding: 20px;
-  box-sizing: border-box;
-`;
+  h2 {
+    margin: 0;
+    color: #f8fbff;
+    font-family: var(--font-display);
+    font-size: clamp(1.15rem, 2.1vw, 1.45rem);
+  }
 
-const ManagerContainer = styled.div`
-  width: 300px;
-  background-color: #222;
-  border-radius: 5px;
-  padding: 20px;
-  box-sizing: border-box;
-
-  @media (max-width: 768px) {
-    position: absolute;
-    right: 0;
-    top: 0;
-    height: 100%;
-    z-index: 10;
-    transform: ${(props) => (props.visible ? 'translateX(0)' : 'translateX(100%)')};
-    transition: transform 0.3s ease;
-    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.3);
+  p {
+    margin: 4px 0 0;
+    color: var(--text-muted);
+    font-size: 0.86rem;
   }
 `;
 
 const ToggleButton = styled.button`
-  background: #00ff99;
-  color: #121212;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  margin-bottom: 10px;
-  display: none;
+  padding: 9px 12px;
+  font-size: 0.82rem;
+`;
 
-  @media (max-width: 768px) {
-    display: block;
-    align-self: flex-end;
+const Workspace = styled.div`
+  display: grid;
+  grid-template-columns: minmax(260px, 330px) minmax(0, 1fr);
+  gap: 14px;
+  min-height: min(76dvh, 920px);
+
+  @media (max-width: 1020px) {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: auto;
   }
 `;
 
-const ExportContainer = styled.div`
-  margin-top: 20px;
+const SidebarBackdrop = styled.div`
+  display: none;
+
+  @media (max-width: 1020px) {
+    display: ${({ open }) => (open ? 'block' : 'none')};
+    position: fixed;
+    inset: 0;
+    background: rgba(2, 7, 14, 0.56);
+    z-index: 70;
+  }
+`;
+
+const Sidebar = styled.aside`
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  background: rgba(6, 11, 20, 0.75);
+  box-shadow: var(--shadow-soft);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  @media (max-width: 1020px) {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    bottom: 12px;
+    width: min(92vw, 420px);
+    transform: ${({ open }) => (open ? 'translateX(0)' : 'translateX(105%)')};
+    transition: transform 220ms ease;
+    z-index: 80;
+    overflow-y: auto;
+  }
+`;
+
+const EditorPane = styled.div`
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  background: rgba(7, 13, 24, 0.68);
+  box-shadow: var(--shadow-soft);
+  padding: 12px;
+  min-height: 0;
 `;
 
 function ChaptersPage() {
-  const [showSidebar, setShowSidebar] = useState(true);
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth <= 1020);
+  const [showSidebar, setShowSidebar] = useState(() => window.innerWidth > 1020);
 
   useEffect(() => {
-    // Auto-hide sidebar on small screens initially
-    if (window.innerWidth <= 768) {
-      setShowSidebar(false);
-    }
+    const onResize = () => {
+      const mobile = window.innerWidth <= 1020;
+      setIsMobile(mobile);
+      if (!mobile) {
+        setShowSidebar(true);
+      }
+    };
+
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
   }, []);
 
   return (
-    <PageContainer>
-      <Title>Manage Chapters</Title>
-      <ToggleButton onClick={() => setShowSidebar((prev) => !prev)}>
-        {showSidebar ? 'Hide Chapters' : 'Show Chapters'}
-      </ToggleButton>
-      <ContentArea>
-        <EditorContainer>
+    <PageShell>
+      <Hero>
+        <div>
+          <h2>Chapter Workspace</h2>
+          <p>Draft, revise, and structure chapters with a dedicated writing layout.</p>
+        </div>
+        <ToggleButton onClick={() => setShowSidebar((visible) => !visible)}>
+          {showSidebar ? 'Hide chapter map' : 'Show chapter map'}
+        </ToggleButton>
+      </Hero>
+
+      <Workspace>
+        {isMobile && <SidebarBackdrop open={showSidebar ? 1 : 0} onClick={() => setShowSidebar(false)} />}
+
+        <Sidebar open={showSidebar ? 1 : 0}>
+          <ChaptersManager onChapterPicked={() => isMobile && setShowSidebar(false)} />
+          <ExportPanel compact />
+        </Sidebar>
+
+        <EditorPane>
           <Editor />
-        </EditorContainer>
-        <ManagerContainer visible={showSidebar}>
-          <ChaptersManager />
-        </ManagerContainer>
-      </ContentArea>
-      <ExportContainer>
-        <ExportPanel />
-      </ExportContainer>
-    </PageContainer>
+        </EditorPane>
+      </Workspace>
+    </PageShell>
   );
 }
 

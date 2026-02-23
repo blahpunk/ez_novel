@@ -3,11 +3,13 @@ import {
   ADD_BOOK,
   SELECT_BOOK,
   UPDATE_BOOK_TITLE,
+  REMOVE_BOOK,
   ADD_CHAPTER,
   REMOVE_CHAPTER,
   SELECT_CHAPTER,
   UPDATE_CHAPTER_TITLE,
   UPDATE_CHAPTER_CONTENT,
+  UPDATE_CHAPTER_GOAL,
   ADD_CHARACTER,
   REMOVE_CHARACTER,
   UPDATE_CHARACTER,
@@ -24,7 +26,7 @@ const initialState = {
     {
       id: 1,
       title: 'My First Book',
-      chapters: [{ id: 1, title: 'Chapter 1', content: {} }], // Use {} for default content
+      chapters: [{ id: 1, title: 'Chapter 1', content: {}, goalWords: 1200 }], // Use {} for default content
       selectedChapterId: 1,
       characters: [],
       locations: [],
@@ -35,6 +37,17 @@ const initialState = {
   selectedBookId: 1,
 };
 
+const createDefaultBook = (id = Date.now()) => ({
+  id,
+  title: 'Untitled Book',
+  chapters: [{ id: 1, title: 'Chapter 1', content: {}, goalWords: 1200 }],
+  selectedChapterId: 1,
+  characters: [],
+  locations: [],
+  plotPoints: [],
+  settings: {},
+});
+
 function booksReducer(state = initialState, action) {
   switch (action.type) {
     case SET_BOOKS: {
@@ -42,11 +55,17 @@ function booksReducer(state = initialState, action) {
         if (!book.chapters || book.chapters.length === 0) {
           return {
             ...book,
-            chapters: [{ id: 1, title: 'Chapter 1', content: {} }],
+            chapters: [{ id: 1, title: 'Chapter 1', content: {}, goalWords: 1200 }],
             selectedChapterId: 1,
           };
         }
-        return book;
+        return {
+          ...book,
+          chapters: book.chapters.map((chapter) => ({
+            ...chapter,
+            goalWords: Number.isFinite(chapter.goalWords) && chapter.goalWords >= 0 ? chapter.goalWords : 1200,
+          })),
+        };
       });
       return {
         ...state,
@@ -60,7 +79,7 @@ function booksReducer(state = initialState, action) {
       const newBook = {
         id: newId,
         title: action.payload.title || 'Untitled Book',
-        chapters: [{ id: 1, title: 'Chapter 1', content: {} }],
+        chapters: [{ id: 1, title: 'Chapter 1', content: {}, goalWords: 1200 }],
         selectedChapterId: 1,
         characters: [],
         locations: [],
@@ -84,6 +103,31 @@ function booksReducer(state = initialState, action) {
       return { ...state, books: updatedBooks };
     }
 
+    case REMOVE_BOOK: {
+      const deletedIndex = state.books.findIndex((book) => book.id === action.payload);
+      const remainingBooks = state.books.filter((book) => book.id !== action.payload);
+
+      if (remainingBooks.length === 0) {
+        const fallbackBook = createDefaultBook();
+        return {
+          ...state,
+          books: [fallbackBook],
+          selectedBookId: fallbackBook.id,
+        };
+      }
+
+      if (state.selectedBookId !== action.payload) {
+        return { ...state, books: remainingBooks };
+      }
+
+      const fallbackIndex = deletedIndex >= 0 ? Math.min(deletedIndex, remainingBooks.length - 1) : 0;
+      return {
+        ...state,
+        books: remainingBooks,
+        selectedBookId: remainingBooks[fallbackIndex].id,
+      };
+    }
+
     case ADD_CHAPTER: {
       const updatedBooks = state.books.map((book) => {
         if (book.id === state.selectedBookId) {
@@ -98,6 +142,7 @@ function booksReducer(state = initialState, action) {
                 ? action.payload.trim()
                 : `Chapter ${newId}`,
             content: {}, // default content as empty object
+            goalWords: 1200,
           };
           return {
             ...book,
@@ -116,7 +161,10 @@ function booksReducer(state = initialState, action) {
           const newChapters = book.chapters.filter((ch) => ch.id !== action.payload);
           return {
             ...book,
-            chapters: newChapters.length > 0 ? newChapters : [{ id: 1, title: 'Chapter 1', content: {} }],
+            chapters:
+              newChapters.length > 0
+                ? newChapters
+                : [{ id: 1, title: 'Chapter 1', content: {}, goalWords: 1200 }],
             selectedChapterId: newChapters.length > 0 ? book.selectedChapterId : 1,
           };
         }
@@ -153,6 +201,19 @@ function booksReducer(state = initialState, action) {
         if (book.id === state.selectedBookId) {
           const updatedChapters = book.chapters.map((ch) =>
             ch.id === action.payload.id ? { ...ch, content: action.payload.content } : ch
+          );
+          return { ...book, chapters: updatedChapters };
+        }
+        return book;
+      });
+      return { ...state, books: updatedBooks };
+    }
+
+    case UPDATE_CHAPTER_GOAL: {
+      const updatedBooks = state.books.map((book) => {
+        if (book.id === state.selectedBookId) {
+          const updatedChapters = book.chapters.map((ch) =>
+            ch.id === action.payload.id ? { ...ch, goalWords: action.payload.goalWords } : ch
           );
           return { ...book, chapters: updatedChapters };
         }
