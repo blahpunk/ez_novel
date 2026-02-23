@@ -1,48 +1,64 @@
-# Node.js dependencies
+# Dependencies
 node_modules/
-client/node_modules/
-server/node_modules/
+**/node_modules/
 
-# Build output
-client/build/
-server/dist/
+# Build and test output
+build/
+dist/
+out/
+coverage/
+.nyc_output/
+
+# Tool caches
+.cache/
+.parcel-cache/
+.eslintcache
+*.tsbuildinfo
 
 # Logs
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# Runtime data
+# Runtime files
 *.pid
-*.seed
 *.pid.lock
+*.seed
 
-# OS-specific files
-.DS_Store
-Thumbs.db
-
-# Environment files
+# Environment and secrets
 .env
 .env.*
+!.env.example
+!.env.sample
 
 # Editor/IDE metadata
 .vscode/
 .idea/
+*.swp
+*.swo
+*.orig
+*~
+~$*
 
-# App-specific sensitive files
-server/data/data.json
-server/data/data.json.bak
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
 
-# Package locks (optional if you want reproducible builds)
-# Remove below if you want to track these:
-# package-lock.json
-# client/package-lock.json
-# server/package-lock.json
+# Project-specific local/sensitive data
+server/data.json
+server/data/*.json
+server/data/**/*.json
+server/data/*.bak
+server/*~*
 
-# PDFs and output docs
+# Generated exports and archives
 *.pdf
-
-# Backup files
 *.bak
-
+*.tmp
+*.temp
+*.zip

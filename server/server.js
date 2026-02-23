@@ -9,7 +9,7 @@ const base64url = require('base64url');
 const app = express();
 const PORT = process.env.PORT || 7385;
 
-const DATA_DIR = path.join(__dirname, 'data');
+const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, 'data');
 fs.ensureDirSync(DATA_DIR);
 
 app.use(cors({ origin: true, credentials: true }));
@@ -32,6 +32,11 @@ app.use((req, res, next) => {
     console.error('Invalid user cookie:', err);
     return res.status(401).json({ error: 'Unauthorized: Invalid user cookie' });
   }
+});
+
+// Return authenticated user info
+app.get('/api/me', (req, res) => {
+  res.json({ user: req.user });
 });
 
 // Get user-specific file path
