@@ -463,7 +463,7 @@ function EditorComponent() {
     const onKeyDown = (event) => {
       const metaOrCtrl = event.metaKey || event.ctrlKey;
 
-      if (event.key === '?' && !metaOrCtrl && !event.altKey) {
+      if (metaOrCtrl && event.key === '/') {
         event.preventDefault();
         setShowShortcuts(true);
         return;
@@ -658,7 +658,7 @@ function EditorComponent() {
               <span>Increase / decrease font</span>
               <kbd>Ctrl/Cmd + + / -</kbd>
               <span>Open shortcuts</span>
-              <kbd>Shift + ?</kbd>
+              <kbd>Ctrl/Cmd + /</kbd>
             </ShortcutsList>
             <ButtonRow style={{ marginTop: '12px' }}>
               <MutedButton onClick={() => setShowShortcuts(false)}>Close</MutedButton>

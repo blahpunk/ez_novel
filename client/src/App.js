@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useContext, useState } from 'react';
+import React, { useEffect, useMemo, useContext, useState, useRef, useCallback } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import TopMenu from './components/TopMenu';
 import BooksPage from './pages/BooksPage';
@@ -273,6 +273,59 @@ const estimateReadMinutes = (words) => {
   return Math.max(1, Math.round(words / 220));
 };
 
+const SAVE_DEBOUNCE_MS = 450;
+const LOCAL_BACKUP_VERSION = 1;
+const LOCAL_BACKUP_KEY_PREFIX = 'ez_novel_backup_v1:';
+
+const serializeData = (value) => {
+  try {
+    return JSON.stringify(value);
+  } catch {
+    return '';
+  }
+};
+
+const getBackupKey = (email) => `${LOCAL_BACKUP_KEY_PREFIX}${String(email || '').toLowerCase()}`;
+
+const readLocalBackup = (email) => {
+  if (!email) return null;
+  try {
+    const raw = localStorage.getItem(getBackupKey(email));
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (
+      !parsed ||
+      parsed.version !== LOCAL_BACKUP_VERSION ||
+      typeof parsed.baseSnapshot !== 'string' ||
+      !parsed.data ||
+      typeof parsed.data !== 'object'
+    ) {
+      return null;
+    }
+    return parsed;
+  } catch {
+    return null;
+  }
+};
+
+const writeLocalBackup = (email, payload) => {
+  if (!email) return;
+  try {
+    localStorage.setItem(getBackupKey(email), JSON.stringify(payload));
+  } catch {
+    // Ignore backup storage write failures.
+  }
+};
+
+const clearLocalBackup = (email) => {
+  if (!email) return;
+  try {
+    localStorage.removeItem(getBackupKey(email));
+  } catch {
+    // Ignore backup storage clear failures.
+  }
+};
+
 function App() {
   const dispatch = useDispatch();
   const { books, selectedBookId } = useSelector(
@@ -289,7 +342,11 @@ function App() {
   const [saveState, setSaveState] = useState('idle');
   const [lastSavedAt, setLastSavedAt] = useState(null);
   const [loadError, setLoadError] = useState('');
+  const [recoveryMessage, setRecoveryMessage] = useState('');
   const [hasLoadedData, setHasLoadedData] = useState(false);
+  const baseSnapshotRef = useRef('');
+  const latestNovelRef = useRef(novelData);
+  const pendingChangesRef = useRef(false);
 
   const selectedBook = useMemo(
     () => books.find((book) => book.id === selectedBookId),
@@ -323,7 +380,30 @@ function App() {
     axios
       .get('/api/novel', { timeout: 10000, withCredentials: true })
       .then((response) => {
-        dispatch(setBooks(response.data));
+        const serverData = response.data;
+        const serverSnapshot = serializeData(serverData);
+        baseSnapshotRef.current = serverSnapshot;
+
+        let nextData = serverData;
+        let recovered = false;
+        const backup = readLocalBackup(user.email);
+        if (backup && backup.baseSnapshot === serverSnapshot) {
+          const backupSnapshot = serializeData(backup.data);
+          if (backupSnapshot && backupSnapshot !== serverSnapshot) {
+            nextData = backup.data;
+            recovered = true;
+            pendingChangesRef.current = true;
+            setRecoveryMessage('Recovered local draft changes from this browser. Syncing now.');
+          }
+        }
+
+        if (!recovered) {
+          pendingChangesRef.current = false;
+          setRecoveryMessage('');
+          clearLocalBackup(user.email);
+        }
+
+        dispatch(setBooks(nextData));
         setHasLoadedData(true);
         setLoadError('');
       })
@@ -341,29 +421,102 @@ function App() {
         axios
           .post('/api/novel', data, { timeout: 10000, withCredentials: true })
           .then(() => {
+            const nextSnapshot = serializeData(data);
+            if (nextSnapshot) {
+              baseSnapshotRef.current = nextSnapshot;
+            }
             setSaveState('saved');
             setLastSavedAt(new Date());
+            pendingChangesRef.current = false;
+            setRecoveryMessage('');
+            clearLocalBackup(user.email);
           })
           .catch((err) => {
             setSaveState('error');
             console.error('Save error', err);
           });
-      }, 1100),
+      }, SAVE_DEBOUNCE_MS),
     [user]
   );
 
   useEffect(() => {
+    latestNovelRef.current = novelData;
+  }, [novelData]);
+
+  useEffect(() => {
     if (!user || !hasLoadedData) return;
+    const currentSnapshot = serializeData(novelData);
+    if (!currentSnapshot || currentSnapshot === baseSnapshotRef.current) return;
+
+    pendingChangesRef.current = true;
+    writeLocalBackup(user.email, {
+      version: LOCAL_BACKUP_VERSION,
+      savedAt: new Date().toISOString(),
+      baseSnapshot: baseSnapshotRef.current,
+      data: novelData,
+    });
+
     setSaveState('saving');
     debouncedSave(novelData);
   }, [novelData, debouncedSave, user, hasLoadedData]);
 
+  const flushPendingSave = useCallback(() => {
+    if (!user || !hasLoadedData || !pendingChangesRef.current) return;
+
+    const data = latestNovelRef.current;
+    const snapshot = serializeData(data);
+    if (!snapshot) return;
+
+    writeLocalBackup(user.email, {
+      version: LOCAL_BACKUP_VERSION,
+      savedAt: new Date().toISOString(),
+      baseSnapshot: baseSnapshotRef.current,
+      data,
+    });
+
+    debouncedSave.flush();
+
+    if (typeof navigator?.sendBeacon === 'function') {
+      try {
+        navigator.sendBeacon('/api/novel', new Blob([snapshot], { type: 'application/json' }));
+      } catch {
+        // Ignore beacon failures.
+      }
+    }
+  }, [debouncedSave, hasLoadedData, user]);
+
+  useEffect(() => {
+    if (!user || !hasLoadedData) return undefined;
+    const id = window.setInterval(() => {
+      if (pendingChangesRef.current) {
+        debouncedSave.flush();
+      }
+    }, 5000);
+    return () => window.clearInterval(id);
+  }, [debouncedSave, hasLoadedData, user]);
+
+  useEffect(() => {
+    const onPageHide = () => flushPendingSave();
+    const onVisibilityChange = () => {
+      if (document.hidden) {
+        flushPendingSave();
+      }
+    };
+
+    window.addEventListener('pagehide', onPageHide);
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    return () => {
+      window.removeEventListener('pagehide', onPageHide);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+    };
+  }, [flushPendingSave]);
+
   useEffect(() => {
     return () => {
-      debouncedSave.flush();
+      flushPendingSave();
       debouncedSave.cancel();
     };
-  }, [debouncedSave]);
+  }, [debouncedSave, flushPendingSave]);
 
   const saveTone = saveState === 'error' ? 'error' : saveState === 'saving' ? 'warn' : 'ok';
   const saveLabel =
@@ -472,6 +625,7 @@ function App() {
 
         <MainContent>
           {loadError && <p style={{ color: '#fca5a5', margin: '0 0 14px' }}>{loadError}</p>}
+          {recoveryMessage && <p style={{ color: '#86efac', margin: '0 0 14px' }}>{recoveryMessage}</p>}
           <Routes>
             <Route path="/books" element={<BooksPage />} />
             <Route path="/chapters" element={<ChaptersPage />} />
