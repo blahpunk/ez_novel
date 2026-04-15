@@ -4,6 +4,8 @@ export const ADD_BOOK = 'ADD_BOOK';
 export const SELECT_BOOK = 'SELECT_BOOK';
 export const UPDATE_BOOK_TITLE = 'UPDATE_BOOK_TITLE';
 export const REMOVE_BOOK = 'REMOVE_BOOK';
+export const REORDER_BOOKS = 'REORDER_BOOKS';
+export const IMPORT_BOOK = 'IMPORT_BOOK';
 
 // CHAPTER actions
 export const ADD_CHAPTER = 'ADD_CHAPTER';
@@ -55,6 +57,16 @@ export const updateBookTitle = (bookId, title) => ({
 export const removeBook = (bookId) => ({
   type: REMOVE_BOOK,
   payload: bookId,
+});
+
+export const reorderBooks = (sourceBookId, targetBookId) => ({
+  type: REORDER_BOOKS,
+  payload: { sourceBookId, targetBookId },
+});
+
+export const importBook = (book) => ({
+  type: IMPORT_BOOK,
+  payload: book,
 });
 
 // Chapter actions

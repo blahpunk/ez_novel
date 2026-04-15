@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import { useSelector } from 'react-redux';
 import { rawToHtml } from '../utils/rawToHtml';
+import { createBookBackupBlob } from '../utils/backupFile';
 
 const ExportContainer = styled.section`
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -25,7 +26,7 @@ const Subtext = styled.p`
   color: var(--text-muted);
 `;
 
-const Actions = styled.div`
+const Row = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -36,27 +37,67 @@ const ActionButton = styled.button`
   font-size: 0.86rem;
 `;
 
-const SecondaryButton = styled(ActionButton)`
-  color: var(--text-secondary);
-  background: rgba(255, 255, 255, 0.07);
-  border-color: rgba(255, 255, 255, 0.16);
+const MenuWrap = styled.div`
+  position: relative;
 `;
 
-const generateFilename = (title) => {
-  const sanitizedTitle = title.replace(/[\\/:*?"<>|]/g, '-');
+const Menu = styled.div`
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 180px;
+  padding: 8px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(9, 16, 29, 0.96);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.32);
+  z-index: 20;
+`;
+
+const MenuButton = styled.button`
+  width: 100%;
+  text-align: left;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 0.84rem;
+  color: #f7fbff;
+  background: transparent;
+  border: 1px solid transparent;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+`;
+
+const StatusText = styled.p`
+  margin: 10px 0 0;
+  font-size: 0.78rem;
+  color: ${({ error }) => (error ? '#fecaca' : 'var(--text-muted)')};
+`;
+
+const sanitizeTitle = (title) => (title || 'Untitled').replace(/[\\/:*?"<>|]/g, '-');
+
+const buildTimestamp = () => {
   const now = new Date();
   const pad = (num) => String(num).padStart(2, '0');
-  const formattedDate =
+  return (
     now.getFullYear().toString() +
     pad(now.getMonth() + 1) +
     pad(now.getDate()) +
     pad(now.getHours()) +
     pad(now.getMinutes()) +
-    pad(now.getSeconds());
-  return `${sanitizedTitle}-${formattedDate}.pdf`;
+    pad(now.getSeconds())
+  );
 };
 
+const makeFilename = (title, ext) => `${sanitizeTitle(title)}-${buildTimestamp()}.${ext}`;
+
 function ExportPanel({ compact = false }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [status, setStatus] = useState('');
+  const [statusError, setStatusError] = useState(false);
+
   const selectedBook = useSelector((state) => state.books.find((book) => book.id === state.selectedBookId));
   const chapters = selectedBook ? selectedBook.chapters : [];
 
@@ -128,18 +169,59 @@ function ExportPanel({ compact = false }) {
       document.body.removeChild(tempDiv);
     }
 
-    const filename = generateFilename(bookTitle);
-    doc.save(filename);
+    doc.save(makeFilename(bookTitle, 'pdf'));
+    setStatus('PDF exported.');
+    setStatusError(false);
+  };
+
+  const exportBackup = () => {
+    const bookTitle = selectedBook ? selectedBook.title : 'ez-novel-backup';
+    const blob = createBookBackupBlob(selectedBook);
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = makeFilename(bookTitle, 'ezn');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    setStatus('Backup file exported.');
+    setStatusError(false);
+  };
+
+  const handleExportAction = async (kind) => {
+    setMenuOpen(false);
+    if (kind === 'pdf') {
+      await exportPDF();
+      return;
+    }
+    if (kind === 'epub') {
+      setStatus('EPUB export is still on the roadmap.');
+      setStatusError(false);
+      return;
+    }
+    if (kind === 'backup') {
+      exportBackup();
+    }
   };
 
   return (
     <ExportContainer compact={compact}>
-      <Heading>Export manuscript</Heading>
-      <Subtext>Keep your latest draft ready for sharing, printing, or long-form review.</Subtext>
-      <Actions>
-        <ActionButton onClick={exportPDF}>Export PDF</ActionButton>
-        <SecondaryButton onClick={() => alert('Export as ePub is on the roadmap.')}>Export ePub</SecondaryButton>
-      </Actions>
+      <Heading>Share / Backup</Heading>
+      <Subtext>Export polished reading copies or save this manuscript as a round-trip backup file.</Subtext>
+      <Row>
+        <MenuWrap>
+          <ActionButton onClick={() => setMenuOpen((open) => !open)}>Export</ActionButton>
+          {menuOpen && (
+            <Menu>
+              <MenuButton onClick={() => handleExportAction('pdf')}>PDF</MenuButton>
+              <MenuButton onClick={() => handleExportAction('epub')}>EPUB</MenuButton>
+              <MenuButton onClick={() => handleExportAction('backup')}>Backup File (.ezn)</MenuButton>
+            </Menu>
+          )}
+        </MenuWrap>
+      </Row>
+      {status ? <StatusText error={statusError ? 1 : 0}>{status}</StatusText> : null}
     </ExportContainer>
   );
 }

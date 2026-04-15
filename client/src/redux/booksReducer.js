@@ -4,6 +4,8 @@ import {
   SELECT_BOOK,
   UPDATE_BOOK_TITLE,
   REMOVE_BOOK,
+  REORDER_BOOKS,
+  IMPORT_BOOK,
   ADD_CHAPTER,
   REMOVE_CHAPTER,
   SELECT_CHAPTER,
@@ -48,6 +50,43 @@ const createDefaultBook = (id = Date.now()) => ({
   settings: {},
 });
 
+const normalizeImportedBook = (book) => {
+  const baseId = Date.now();
+  const chapters = Array.isArray(book?.chapters) && book.chapters.length > 0
+    ? book.chapters.map((chapter, index) => ({
+        ...chapter,
+        id: index + 1,
+        title: chapter.title || `Chapter ${index + 1}`,
+        content: chapter.content && typeof chapter.content === 'object' ? chapter.content : {},
+        goalWords: Number.isFinite(chapter.goalWords) && chapter.goalWords >= 0 ? chapter.goalWords : 1200,
+      }))
+    : [{ id: 1, title: 'Chapter 1', content: {}, goalWords: 1200 }];
+
+  const remapCollection = (items) =>
+    Array.isArray(items)
+      ? items.map((item, index) => ({
+          ...item,
+          id: index + 1,
+        }))
+      : [];
+
+  const selectedChapterIndex = Array.isArray(book?.chapters)
+    ? book.chapters.findIndex((chapter) => chapter.id === book.selectedChapterId)
+    : -1;
+  const selectedChapterId = chapters[Math.max(0, selectedChapterIndex)]?.id || chapters[0].id;
+
+  return {
+    id: baseId,
+    title: book?.title || 'Imported Novel',
+    chapters,
+    selectedChapterId,
+    characters: remapCollection(book?.characters),
+    locations: remapCollection(book?.locations),
+    plotPoints: remapCollection(book?.plotPoints),
+    settings: book?.settings && typeof book.settings === 'object' ? book.settings : {},
+  };
+};
+
 function booksReducer(state = initialState, action) {
   switch (action.type) {
     case SET_BOOKS: {
@@ -88,7 +127,7 @@ function booksReducer(state = initialState, action) {
       };
       return {
         ...state,
-        books: [...state.books, newBook],
+        books: [newBook, ...state.books],
         selectedBookId: newId,
       };
     }
@@ -125,6 +164,38 @@ function booksReducer(state = initialState, action) {
         ...state,
         books: remainingBooks,
         selectedBookId: remainingBooks[fallbackIndex].id,
+      };
+    }
+
+    case REORDER_BOOKS: {
+      const { sourceBookId, targetBookId } = action.payload;
+      if (sourceBookId === targetBookId) {
+        return state;
+      }
+
+      const sourceIndex = state.books.findIndex((book) => book.id === sourceBookId);
+      const targetIndex = state.books.findIndex((book) => book.id === targetBookId);
+
+      if (sourceIndex === -1 || targetIndex === -1) {
+        return state;
+      }
+
+      const reorderedBooks = [...state.books];
+      const [movedBook] = reorderedBooks.splice(sourceIndex, 1);
+      reorderedBooks.splice(targetIndex, 0, movedBook);
+
+      return {
+        ...state,
+        books: reorderedBooks,
+      };
+    }
+
+    case IMPORT_BOOK: {
+      const importedBook = normalizeImportedBook(action.payload);
+      return {
+        ...state,
+        books: [importedBook, ...state.books],
+        selectedBookId: importedBook.id,
       };
     }
 
